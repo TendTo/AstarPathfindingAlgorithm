@@ -1,0 +1,39 @@
+<div id="Settings " class="modal fade " tabindex="-1 " role="dialog " aria-hidden="true ">
+    <div class="modal-dialog modal-dialog-centered " role="document ">
+        <div class="modal-content ">
+            <div class="modal-header ">
+                <h3 class="modal-title ">Settings</h3>
+            </div>
+            <table class="modal-body">
+                <tbody>
+                    <tr>
+                        <th> Rows </th>
+                        <th>&nbsp;</th>
+                        <th> Columns </th>
+                    </tr>
+                    <tr>
+                        <th><input id="h" maxlength="3" size="3" value="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');"></th>
+                        <th>x</th>
+                        <th><input id="w" maxlength="3" size="3" value="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');"></th>
+                    </tr>
+                    <tr>
+                        <th><br></th>
+                        <!--Spacing for the table-->
+                    </tr>
+                    <tr>
+                        <th> Size cells </th>
+                    </tr>
+                    <tr>
+                        <th><input id="s" maxlength="3" size="3" value="40" oninput="this.value = this.value.replace(/[^0-9]/g, '');"></th>
+                    </tr>
+                </tbody>
+            </table>
+            <br><br>
+        </div>
+    </div>
+    <div class="modal-footer ">
+        <button class="btn-secondary " type="button " data-dismiss="modal ">Cancel</button>
+        <button class="btn-primary " type="button " data-dismiss="modal ">Save</button>
+    </div>
+</div>
+</div>

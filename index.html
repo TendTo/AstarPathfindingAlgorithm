@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="vendor/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style/style.css">
+    <script src="vendor/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="vendor/js/popper.min.js"></script>
+    <script src="vendor/js/bootstrap.min.js"></script>
+    <!-- p5 -->
+    <script src="vendor/js/p5.js"></script>
+    <!-- A* -->
+    <script type="text/javascript" src="source/main.js"></script>
+    <script type="text/javascript" src="source/astar.js"></script>
+    <title>A* pathfinding</title>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark ">
+            <a class="navbar-brand" style="justify-content: center;" href="#">
+                <h2>A* pathfinding algorithm</h2>
+            </a>
+            <div id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <div>
+                            <button id="b_play" type="button" class="btn btn-outline-light" onclick="startAlgotithm()">
+                                <i class="fa fa-play"></i>
+                                Start algorithm
+                            </button>
+                            <button id="b_pause" type="button" class="btn btn-outline-light" onclick="setStatus('pause')">
+                                <i class="fa fa-pause"></i>
+                                Pause
+                            </button>
+                            <button id="b_stop" type="button" class="btn btn-outline-light" onclick="setStatus('stop')">
+                                <i class="fa fa-stop"></i>
+                                Stop
+                            </button>
+                            <br>
+                            <button id="b_clear" type="button" class="btn btn-outline-light" onclick="clearBoard()">
+                                <i class="fa fa-trash"></i>
+                                Clear
+                            </button>
+                            <button id="b_settings" type="button" class="btn btn-outline-light" onclick="callSettings()">
+                                <i class="fa fa-cog"></i>
+                                Settings
+                            </button>
+                            <button type="button" class="btn btn-outline-light" onclick="window.open('https://github.com/TendTo')">
+                                <i class="fa fa-github"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid" style="margin-top: 10px;">
+        <hr>
+        <!-- Palette -->
+        <div class="row">
+            <div class="tools ml-3" style="overflow-y:visible">
+                <div class="list-group float-right justify-content" style="min-width: 50px; max-width: 60px">
+                    <button type="button" onclick="setPalette('ground')" class="list-group-item list-group-item-action pl-1 palette-button">
+                        Ground
+                        <img src="graphic/ground.svg" style="width: 50px;" />
+                    </button>
+                    <button type="button" onclick="setPalette('wall')" class="list-group-item list-group-item-action pl-1 palette-button">
+                        Wall
+                        <img src="graphic/wall.svg" style="width: 50px;" />
+                    </button>
+                    <button type="button" onclick="setPalette('special_ground')" class="list-group-item list-group-item-action pl-1 palette-button">
+                        Special
+                        ground
+                        <img src="graphic/special_ground.svg" style="width: 50px;" />
+                    </button>
+                    <button type="button" onclick="setPalette('start')" class="list-group-item list-group-item-action pl-1 palette-button">
+                        Start
+                        <img src="graphic/start.svg" style="width: 50px;" />
+                    </button>
+                    <button type="button" onclick="setPalette('end')" class="list-group-item list-group-item-action pl-1 palette-button">
+                        End
+                        <img src="graphic/end.svg" style="width: 50px;" />
+                    </button>
+                </div>
+            </div>
+            <div class="col-10 pl-0">
+                <!-- Canvas -->
+                <div id="canvas" style="margin-left: 20px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Settings modal-->
+    <div id="settings" class="modal fade modal-class modal-static" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Settings</h3>
+                </div>
+                <div class="modal-body row">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th> Rows <i data-toggle="tooltip" data-placement="top" title="Number of rows<br>Min 1, Max 99">&nbsp;?</i></th>
+                                <th>&nbsp;</th>
+                                <th> Columns <i data-toggle="tooltip" data-placement="top" title="Number of columns<br>Min 1, Max 99">&nbsp;?</i></th>
+                            </tr>
+                            <tr>
+                                <th><input id="h" maxlength="2" size="2" value="10" oninput="checkInput(this)" onblur="validateInput(this, 1, 99)"></th>
+                                <th>&nbsp;x&nbsp;</th>
+                                <th><input id="w" maxlength="2" size="2" value="10" oninput="checkInput(this)" onblur="validateInput(this, 1, 99)"></th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <!--Spacing for the table-->
+                                <th><br></th>
+                                <th><br></th>
+                                <th><br></th>
+                            </tr>
+                            <tr>
+                                <th> Size cells <i data-toggle="tooltip" data-placement="top" title="Size of each cell<br>Min 4, max 99">&nbsp;?</i></th>
+                                <th> &nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th> Special ground <i data-toggle="tooltip" data-placement="top" title="Traversing the special ground will cost X times the normal cost<br>Only used for the g value<br>Min 0, Max 99">&nbsp;?</i></th>
+                            </tr>
+                            <tr>
+                                <th><input id="s" maxlength="2" size="2" value="70" oninput="checkInput(this)" onblur="validateInput(this, 4, 99)"></th>
+                                <th> </th>
+                                <th><input id="m" value="2" type="number" max="60" style="width: 4em" step="0.5" onblur="validateInput(this, 0, 99)"></th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
+                            <!--Spacing for the table-->
+                            <th><br></th>
+                            </tr>
+                            <tr>
+                                <th> Animation's framerate <i data-toggle="tooltip" data-placement="top" title="How many steps done each second<br>Min 0.1, Max 60">&nbsp;?</i></th>
+                            </tr>
+                            <tr>
+                                <th><input id="f" value="2" type="number" max="60" style="width: 4em" step="0.5" onblur="validateInput(this, 0.1, 60)"></th>
+                            </tr>
+                            <tr>
+                                <!--Spacing for the table-->
+                                <th><br></th>
+                            </tr>
+                            <tr>
+                                <th> Heuristic <i data-toggle="tooltip" data-placement="top" title="Heuristic used to calculate the h value for each node">&nbsp;?</i></th>
+                            </tr>
+                            <tr>
+                                <th> <select id="hsearch">
+                                        <option value="1">Manatthan distance</option>
+                                        <option value="2">Diagonal distance</option>
+                                        <option value="3">Euclidian distance</option>
+                                        <option value="4">Dijkstra (h = 0)</option>
+                                    </select></th>
+                            </tr>
+                            <tr>
+                                <!--Spacing for the table-->
+                                <th><br></th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" class="form-check-input, ml-0" id="d">
+                                    <label class="form-check-label" for="d">Can move diagonally  <i data-toggle="tooltip" data-placement="top" title="Whether or not diagonal movements should be considered">&nbsp;?</i></label>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <br><br>
+                <div class=" modal-footer">
+                    <button class="btn-secondary" type="button" data-dismiss="modal" onclick="cancel()">Cancel</button>
+                    <button class="btn-primary" type="button" data-dismiss="modal" onclick="apply()">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Snackbar-->
+    <div id="snackbar">Invalid start or end</div>
+
+    <script>
+        document.validateInput = validateInput;
+        document.checkInput = checkInput;
+
+        //Needed to use the tooltips
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip({
+                html: true
+            })
+        })
+
+        function checkInput(ob) {
+            ob.value = ob.value.replace(/[^0-9]/g, '');
+        }
+
+        function validateInput(ob, min, max) {
+            //ob.value = ob.value.replace(/(?<![1-9])0+\b/g, '1');
+
+            if (ob.value == "")
+                ob.value = min;
+            else if (ob.value > max)
+                ob.value = max;
+            else if (ob.value < min)
+                ob.value = min;
+        }
+
+        function callSettings() {
+            setStatus('settings');
+            $('#settings').modal('show');
+        }
+    </script>
+</body>
+
+</html>
