@@ -2,7 +2,8 @@
 Astar algorithm applied to a pathfinding scenario, with the ability to see the algorithm in action, step by step.
  
 ## :red_circle: Online version
-A live version is available [here](https://drendog.github.io/Logic-Circuit-Simulator/)<br>
+A live version is available [here](https://tendto.github.io/AstarPathfindingAlgorithm/)
+
 ![](graphic/demo.gif)
  
 ## :books: Documentation
