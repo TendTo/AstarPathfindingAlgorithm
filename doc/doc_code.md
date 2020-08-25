@@ -1,15 +1,40 @@
-## Documentation
+## Code documentation
 
-### Constants
-Vertical and Horizontal cost: 10
-Diagonal cost: 14
+### index.html
+```javascript
+/**
+ * Used to enable the tooltips
+ */
+$(function())
 
-### Heuristics
- To find the h value, there are 4 possible heuristics contemplated:
-- **Manhattan distance:** estimate the distance considering only horizontal-vertical movements. Ignores obstacles
-- **Diagonal distance:** estimate the distance considering all the 8 possible directions. Ignores obstacles
-- **Euclid distance:** estimate the distance as the crow flies. Ignores obstacles
-- **Dijkstra (h = 0):** always set h = 0. It behaves exactly like Dijkstra's  algorithm
+/**
+ * Prevents the use of unwanted characters
+ * @param {any} ob - html input field
+ */
+function checkInput(ob)
+
+/**
+ * Checks that the value is between the constrains
+ * @param {any} ob - html input field
+ * @param {number} min - minimum value allowed
+ * @param {number} max - maximum value allowed
+ */
+function validateInput(ob, min, max)
+
+/**
+ * Change the status value and shows the modal
+ */
+function callSettings()
+
+/**
+ * Show the results of the algorithm
+ * @param {number} distance - distance result from the start point to hte end point
+ * @param {number} stepCounter - times of calls to the function 'stepSolution'
+ * @param {number} fcounter - times an fvalue got evalueted
+ * @param {number} time - time enlapsed
+ */
+function setResults(distance, stepCounter, fcounter, time)
+```
 
 ### main.js
 ```javascript

@@ -50,7 +50,18 @@ canvas {
     /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    width: 300px;
+    width: 350px;
+    /* Could be more or less, depending on screen size */
+}
+
+.modal-content-it {
+    color: aliceblue;
+    background-color: #121212;
+    margin: 15% auto;
+    /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 400px;
     /* Could be more or less, depending on screen size */
 }
 

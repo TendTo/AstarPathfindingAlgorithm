@@ -1,18 +1,30 @@
+/// <reference path="./p5.global-mode.d.ts" />
+
 //#region consts and vars
 const palette = Object.freeze({ "ground": 1, "wall": 2, "start": 3, "end": 4, "special_ground": 5 });
 const status = Object.freeze({ "editor": 1, "running": 2, "pause": 3, "stop": 4, "settings": 5 });
 const WALKABLE = 1;
 const UNWALKABLE = -1;
-const D = 10,
-    D2 = 14;
 
-var i_w, i_h, i_dim, i_framerate, i_spacialMult, d_heuristic, c_diagonal, snackbar, b_clear, b_settings, b_play, b_pause, b_stop;
+const strokeDim = 3;
+
+var C_GROUND_FILL,
+    C_GROUND_STOKE,
+    C_WALL_FILL,
+    C_SPECIALGROUND_FILL,
+    C_START_STOKE,
+    C_END_STROKE;
+var D = 10,
+    D2 = 14;
+var i_w, i_h, i_dim, i_framerate, i_d1, i_d2, i_specialMult, i_hMult, d_heuristic, c_diagonal, snackbar, b_clear, b_settings, b_play, b_pause, b_stop;
 var currentPalette = palette["ground"];
 var currentStatus;
-var special_groundMult = 5;
+var specialMult = 5;
+var hMult = 2;
 var heuristic = 1;
 var canDiagonally = true;
-var squares = [];
+var squares;
+var modifiedSquares;
 var start, end;
 var astar;
 var w = 9,
@@ -20,6 +32,7 @@ var w = 9,
 var dim = 70;
 var animFramerate = 2;
 var locked = false;
+var c;
 //#endregion
 
 window.startAlgotithm = startAlgotithm;
@@ -35,11 +48,11 @@ window.clearBoard = clearBoard;
 function setup() {
     var canvas = createCanvas(w * dim, h * dim);
     canvas.parent('canvas');
+    canvas.mousePressed(onMousePressed);
 
     start = createVector(-1, -1);
     end = createVector(-1, -1);
     astar = new Astar();
-
 
     setupButtons();
     initializeMatrix();
@@ -47,6 +60,7 @@ function setup() {
     setStatus("editor");
     drawMatrix();
 }
+
 /**
  * Called each frame
  */
@@ -73,7 +87,10 @@ function setupButtons() {
     i_h = document.getElementById("h");
     i_dim = document.getElementById("s");
     i_framerate = document.getElementById("f");
-    i_spacialMult = document.getElementById("m");
+    i_d1 = document.getElementById("d1");
+    i_d2 = document.getElementById("d2");
+    i_specialMult = document.getElementById("sm");
+    i_hMult = document.getElementById("hm");
     d_heuristic = document.getElementById("hsearch");
     c_diagonal = document.getElementById("d");
     snackbar = document.getElementById("snackbar");
@@ -87,9 +104,19 @@ function setupButtons() {
     i_h.value = h;
     i_dim.value = dim;
     i_framerate.value = animFramerate;
-    i_spacialMult.value = special_groundMult;
+    i_d1.value = D;
+    i_d2.value = D2;
+    i_specialMult.value = specialMult;
+    i_hMult.value = hMult;
     d_heuristic.selectedIndex = heuristic;
     c_diagonal.checked = canDiagonally;
+
+    C_GROUND_FILL = color(255);
+    C_GROUND_STOKE = color(0);
+    C_WALL_FILL = color(0, 0, 255);
+    C_SPECIALGROUND_FILL = color('#666666');
+    C_START_STOKE = color(0, 255, 0);
+    C_END_STROKE = color(255, 0, 0);
 }
 
 /**
@@ -98,19 +125,26 @@ function setupButtons() {
 function initializeMatrix() {
 
     squares = [w];
-    for (var i = 0; i < w; i++)
-        squares[i] = [h];
     for (var i = 0; i < w; i++) {
-        for (var j = 0; j < h; j++) {
-            squares[i][j] = WALKABLE;
-        }
+        squares[i] = [];
+        squares[i].length = h;
+        squares[i].fill(WALKABLE);
     }
+
+    modifiedSquares = [];
+    modifiedSquares.length = w * h;
+    modifiedSquares.fill(true);
 }
 
 /**
  * Udate the matrix with the new width and height but trying to keep the elements that don't need deleting
  */
 function updateMatrix() {
+
+    if (squares.length == w && squares[0].length == h) //Le dimensioni non sono state modificate
+        return;
+
+    resizeCanvas(w * dim, h * dim);
 
     const pW = squares.length;
     squares.length = w;
@@ -129,30 +163,41 @@ function updateMatrix() {
     for (var i = 0; i < w; i++) {
         for (var j = 0; j < h; j++) {
             if (squares[i][j] != WALKABLE && squares[i][j] != UNWALKABLE)
-                squares[i][j] = special_groundMult;
+                squares[i][j] = specialMult;
         }
     }
+
+    modifiedSquares.length = w * h;
+    modifiedSquares.fill(true);
+
 
     if (!validVector(start))
         start.x = start.y = -1;
     if (!validVector(end))
         end.x = end.y = -1;
+
 }
 
 /**
  * Draw the square matrix on the canvas, according to the state of each square
  */
 function drawMatrix() {
-    background(0);
-    stroke(0);
-    strokeWeight(3);
+    //console.log(squares);
     for (var i = 0; i < w; i++) {
         for (var j = 0; j < h; j++) {
-            if (squares[i][j] == WALKABLE) fill(255);
-            else if (squares[i][j] == UNWALKABLE) fill(0, 0, 255);
-            else if (squares[i][j] == special_groundMult) fill('#666666');
-            else fill(0);
-            square(dim * i, dim * j, dim);
+            c = null;
+            if (squares[i][j] == WALKABLE && modifiedSquares[i * h + j]) c = C_GROUND_FILL;
+            else if (squares[i][j] == UNWALKABLE && modifiedSquares[i * h + j]) c = C_WALL_FILL;
+            else if (squares[i][j] == specialMult && modifiedSquares[i * h + j]) c = C_SPECIALGROUND_FILL;
+            else if (modifiedSquares[i * h + j]) c = (0, 255, 111);
+
+            if (c !== null) {
+                stroke(0);
+                strokeWeight(strokeDim);
+                fill(c);
+                square(dim * i, dim * j, dim);
+                modifiedSquares[i * h + j] = false;
+            }
         }
     }
 }
@@ -161,14 +206,17 @@ function drawMatrix() {
  * Draw both end and start positions
  */
 function drawStartEnd() {
-    strokeWeight(3);
-    fill(255);
-    stroke(0, 255, 0);
-    if (validVector(start))
+    stroke(0);
+    strokeWeight(strokeDim);
+
+    if (validVector(start)) {
+        fill(0, 255, 0);
         square(dim * start.x, dim * start.y, dim);
-    stroke(255, 0, 0);
-    if (validVector(end))
+    }
+    if (validVector(end)) {
+        fill(255, 0, 0);
         square(dim * end.x, dim * end.y, dim);
+    }
 }
 
 /**
@@ -184,39 +232,36 @@ function drawCurrentMouse() {
     if (x < 0 || x >= w || y < 0 || y >= h)
         return;
 
-    var drawColor = color(255);
+    stroke(0);
+    strokeWeight(strokeDim);
     switch (currentPalette) {
         case palette.ground:
-            strokeWeight(3);
-            stroke(0);
+            c = C_GROUND_FILL;
             break;
         case palette.wall:
-            strokeWeight(0);
-            drawColor = color(0, 0, 255);
+            c = C_WALL_FILL;
             break;
         case palette.special_ground:
-            strokeWeight(0);
-            drawColor = color('#666666');
+            c = C_SPECIALGROUND_FILL;
             break;
         case palette.start:
-            strokeWeight(3);
-            stroke(0, 255, 0);
+            c = C_START_STOKE;
             break;
         case palette.end:
-            strokeWeight(3);
-            stroke(255, 0, 0);
+            c = C_END_STROKE;
             break;
         default:
             break;
     }
-    fill(drawColor);
+    fill(c);
     square(dim * x + dim / 4, dim * y + dim / 4, dim / 2);
+    modifiedSquares[x * h + y] = true;
 }
 
 /**
  * If the position is valid, apply the correct palette on the square
  */
-function mousePressed() {
+function onMousePressed() {
     if (currentStatus === status["stop"]) { //If the animation has stopped, resume control
         setStatus("editor")
         return;
@@ -246,7 +291,7 @@ function mousePressed() {
             locked = true;
             break;
         case palette.special_ground:
-            squares[x][y] = special_groundMult;
+            squares[x][y] = specialMult;
             removeStartEnd(x, y);
             locked = true;
             break;
@@ -260,6 +305,7 @@ function mousePressed() {
         default:
             break;
     }
+    modifiedSquares[x * h + y] = true;
 }
 
 /**
@@ -267,7 +313,7 @@ function mousePressed() {
  */
 function mouseDragged() {
     if (locked) {
-        mousePressed();
+        onMousePressed();
     }
 }
 
@@ -296,6 +342,7 @@ function setStart(x, y) {
     if (end.x == x && end.y == y)
         end.x = end.y = -1;
 
+    modifiedSquares[start.x * h + start.y] = true;
     squares[x][y] = WALKABLE;
     start.x = x;
     start.y = y;
@@ -310,6 +357,7 @@ function setEnd(x, y) {
     if (start.x == x && start.y == y)
         start.x = start.y = -1;
 
+    modifiedSquares[end.x * h + end.y] = true;
     squares[x][y] = WALKABLE;
     end.x = x;
     end.y = y;
@@ -333,7 +381,7 @@ function removeStartEnd(x, y) {
 function startAlgotithm() {
     if (currentStatus == status["pause"]) { //If the algorithm is paused, continue the animation
         setStatus("running");
-    } else if (validVector(start) && validVector(end)) {
+    } else if (validVector(start) && validVector(end)) { //If start and end are well positioned, start the algorithm
         setStatus("running");
         drawMatrix();
         drawStartEnd();
@@ -349,7 +397,14 @@ function startAlgotithm() {
  * Clears the board
  */
 function clearBoard() {
-    initializeMatrix();
+    squares.forEach((e1, i1) => e1.forEach((e2, i2) => {
+        if (e2 != WALKABLE) {
+            e1[i2] = WALKABLE;
+            modifiedSquares[i1 * h + i2] = true;
+        }
+    }));
+    modifiedSquares[start.x * h + start.y] = true;
+    modifiedSquares[end.x * h + end.y] = true;
     start.x = start.y = end.x = end.y = -1;
 }
 
@@ -365,15 +420,25 @@ function setPalette(id) {
  * Apply the changes in the settings
  */
 function apply() {
+    var oldDim = dim;
+
     w = parseInt(i_w.value);
     h = parseInt(i_h.value);
     dim = parseInt(i_dim.value);
     animFramerate = parseFloat(i_framerate.value);
-    special_groundMult = parseFloat(i_spacialMult.value);
+    D = parseFloat(i_d1.value);
+    D2 = parseFloat(i_d2.value);
+    specialMult = parseFloat(i_specialMult.value);
+    hMult = parseFloat(i_hMult.value);
     heuristic = d_heuristic.selectedIndex;
     canDiagonally = c_diagonal.checked == true;
 
-    resizeCanvas(w * dim, h * dim);
+
+    if (oldDim != dim) {
+        modifiedSquares.fill(true);
+        resizeCanvas(w * dim, h * dim);
+    }
+
     updateMatrix();
     setStatus("editor");
 }
@@ -386,7 +451,10 @@ function cancel() {
     i_h.value = h;
     i_dim.value = dim;
     i_framerate.value = animFramerate;
-    i_spacialMult.value = special_groundMult;
+    i_d1.value = D;
+    i_d2.value = D2;
+    i_specialMult.value = specialMult;
+    i_hMult.value = hMult;
     d_heuristic.selectedIndex = heuristic;
     c_diagonal.checked = canDiagonally;
     setStatus("editor");
@@ -408,12 +476,14 @@ function setStatus(newStatus) {
             frameRate(animFramerate);
             b_stop.disabled = b_pause.disabled = false;
             b_play.disabled = b_clear.disabled = b_settings.disabled = true;
+            window.setResults(-1);
             break;
         case status["pause"]:
             b_stop.disabled = b_play.disabled = false;
             b_pause.disabled = b_clear.disabled = b_settings.disabled = true;
             break;
         case status["stop"]:
+            modifiedSquares.fill(true);
             b_play.disabled = b_clear.disabled = b_settings.disabled = false;
             b_pause.disabled = b_stop.disabled = true;
             break;

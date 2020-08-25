@@ -5,17 +5,17 @@
     <!--Google -->
     <meta name="google-site-verification" content="GAE-uIRdnigcZt8VF2XsG0-2fF-ZrgOAx_rN-j-W1no" />
     <!-- BOOTSTRAP -->
-    <link rel="stylesheet" href="vendor/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../vendor/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style/style.css">
-    <script src="vendor/js/jquery-3.3.1.slim.min.js"></script>
-    <script src="vendor/js/popper.min.js"></script>
-    <script src="vendor/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../style/style.css">
+    <script src="../vendor/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="../vendor/js/popper.min.js"></script>
+    <script src="../vendor/js/bootstrap.min.js"></script>
     <!-- p5 -->
-    <script src="vendor/js/p5.js"></script>
+    <script src="../vendor/js/p5.js"></script>
     <!-- A* -->
-    <script src="source/main.js"></script>
-    <script src="source/astar.js"></script>
+    <script src="../source/main.js"></script>
+    <script src="../source/astar.js"></script>
     <title>A* pathfinding</title>
 </head>
 
@@ -24,7 +24,7 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark " style="position: fixed; width: 100%; z-index: 1;">
             <a class="navbar-brand" style="justify-content: center;">
-                <h2>A* pathfinding algorithm</h2>
+                <h2>A* algoritmo di pathfinding</h2>
             </a>
             <div id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
@@ -32,11 +32,11 @@
                         <div>
                             <button id="b_play" type="button" class="btn btn-outline-light" onclick="startAlgotithm()">
                                 <i class="fa fa-play"></i>
-                                Start algorithm
+                                Avvia algoritmo
                             </button>
                             <button id="b_pause" type="button" class="btn btn-outline-light" onclick="setStatus('pause')">
                                 <i class="fa fa-pause"></i>
-                                Pause
+                                Pausa
                             </button>
                             <button id="b_stop" type="button" class="btn btn-outline-light" onclick="setStatus('stop')">
                                 <i class="fa fa-stop"></i>
@@ -45,11 +45,11 @@
                             <br>
                             <button id="b_clear" type="button" class="btn btn-outline-light" onclick="clearBoard()">
                                 <i class="fa fa-trash"></i>
-                                Clear
+                                Cancella
                             </button>
                             <button id="b_settings" type="button" class="btn btn-outline-light" onclick="callSettings()">
                                 <i class="fa fa-cog"></i>
-                                Settings
+                                Impostazioni
                             </button>
                             <button type="button" class="btn btn-outline-light" onclick="window.open('https://github.com/TendTo/AstarPathfindingAlgorithm')">
                                 <i class="fa fa-github"></i>
@@ -59,12 +59,12 @@
                     <li id="result" style="margin-left: 20px; font-size: small;"></li>
                     <!-- 
                     <li style="position: fixed; align-self: center; right: 10px;">
-                        <a href="http://validator.w3.org/check/referer" target="_blank"><img src="graphic/htmlValidator.png" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a>
+                        <a href="http://validator.w3.org/check/referer" target="_blank"><img src="../graphic/htmlValidator.png" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a>
                     </li>
                     -->
                     <li style="position: fixed; align-self: center; right: 30px;">
-                        <a href="translations/index-it.html"><img src="graphic/language.svg" alt="Lingua italiana" height="40" width="40"> </a>
-                        <a href="translations/index-it.html"> italiano</a>
+                        <a href="../index.html"><img src="../graphic/language.svg" alt="English language" height="40" width="40"> </a>
+                        <a href="../index.html"> english</a>
                     </li>
                 </ul>
             </div>
@@ -78,25 +78,26 @@
             <div class="tools ml-3" style="overflow-y:visible; position: fixed; top: 110px; left: 30px; z-index: 1;">
                 <div class="list-group float-right justify-content" style="min-width: 50px; max-width: 60px">
                     <button type="button" onclick="setPalette('ground')" class="list-group-item list-group-item-action pl-1 palette-button">
-                        Ground
-                        <img src="graphic/ground.svg" style="width: 50px;" alt="Ground icon" />
+                        Terreno
+                        <img src="../graphic/ground.svg" style="width: 50px;" alt="Icona per la terra" />
                     </button>
                     <button type="button" onclick="setPalette('wall')" class="list-group-item list-group-item-action pl-1 palette-button">
-                        Wall
-                        <img src="graphic/wall.svg" style="width: 50px;" alt="Wall icon" />
+                        Muro
+                        <img src="../graphic/wall.svg" style="width: 50px;" alt="Icona per il muro" />
                     </button>
                     <button type="button" onclick="setPalette('special_ground')" class="list-group-item list-group-item-action pl-1 palette-button">
-                        Special
-                        ground
-                        <img src="graphic/special_ground.svg" style="width: 50px;" alt="Special ground icon" />
+                        Terreno
+                        speciale
+                        <img src="../graphic/special_ground.svg" style="width: 50px;"
+                            alt="Icona per il terreno speciale" />
                     </button>
                     <button type="button" onclick="setPalette('start')" class="list-group-item list-group-item-action pl-1 palette-button">
-                        Start
-                        <img src="graphic/start.svg" style="width: 50px;" alt="Start icon" />
+                        Inizio
+                        <img src="../graphic/start.svg" style="width: 50px;" alt="Icon per l'inizio" />
                     </button>
                     <button type="button" onclick="setPalette('end')" class="list-group-item list-group-item-action pl-1 palette-button">
-                        End
-                        <img src="graphic/end.svg" style="width: 50px;" alt="End icon" />
+                        Fine
+                        <img src="../graphic/end.svg" style="width: 50px;" alt="Icona per la fine" />
                     </button>
                 </div>
             </div>
@@ -112,17 +113,17 @@
     <!-- Settings modal-->
     <div id="settings" class="modal fade modal-class" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered " role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="width: 370px;">
                 <div class="modal-header">
-                    <h3 class="modal-title">Settings</h3>
+                    <h3 class="modal-title">Impostazioni</h3>
                 </div>
                 <div class="modal-body row">
                     <table>
                         <tbody>
                             <tr>
-                                <th> Rows <i data-toggle="tooltip" data-placement="top" title="Number of rows<br>Min 1 - Max 99">&nbsp;?</i></th>
+                                <th> Righe <i data-toggle="tooltip" data-placement="top" title="Numero di righes<br>Min 1 - Max 99">&nbsp;?</i></th>
                                 <th>&nbsp;</th>
-                                <th> Columns <i data-toggle="tooltip" data-placement="top" title="Number of columns<br>Min 1 - Max 99">&nbsp;?</i></th>
+                                <th> Colonne <i data-toggle="tooltip" data-placement="top" title="Numero di colonne<br>Min 1 - Max 99">&nbsp;?</i></th>
                             </tr>
                             <tr>
                                 <th><input id="h" value="10" type="number" style="width: 4em" step="1" oninput="checkInput(this)" onblur="validateInput(this, 1, 99)"></th>
@@ -140,9 +141,9 @@
                                 <th><br></th>
                             </tr>
                             <tr>
-                                <th> Cell size <i data-toggle="tooltip" data-placement="top" title="Size of each cell<br>Min 6 - Max 99">&nbsp;?</i></th>
+                                <th> Dimensione cella <i data-toggle="tooltip" data-placement="top" title="Dimensione di ogni cella<br>Min 6 - Max 99">&nbsp;?</i></th>
                                 <th> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                <th> Framerate <i data-toggle="tooltip" data-placement="top" title="Framerate of the animation<br>Min 0.1 - Max 60">&nbsp;?</i></th>
+                                <th> Framerate <i data-toggle="tooltip" data-placement="top" title="Framerate dell'animazione<br>Min 0.1 - Max 60">&nbsp;?</i></th>
                             </tr>
                             <tr>
                                 <th><input id="s" value="70" type="number" style="width: 4em" step="1" oninput="checkInput(this)" onblur="validateInput(this, 6, 99)"></th>
@@ -156,10 +157,10 @@
                                 <th><br></th>
                             </tr>
                             <tr>
-                                <th> <b>+</b> direction cost <i data-toggle="tooltip" data-placement="top" title="Cost of moving vertically or horizontally<br>Min 0 - Max 50">&nbsp;?</i>
+                                <th> Costo direzione <b>+</b> <i data-toggle="tooltip" data-placement="top" title="Costo del movimento verticale o orizzontale<br>Min 0 - Max 50">&nbsp;?</i>
                                 </th>
                                 <th> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                <th> <b>x</b> direction cost <i data-toggle="tooltip" data-placement="top" title="Cost of moving diagonally<br>Min 0 - Max 50">&nbsp;?</i>
+                                <th> Costo direzione <b>x</b> <i data-toggle="tooltip" data-placement="top" title="Costo del movimento diagonale<br>Min 0 - Max 50">&nbsp;?</i>
                                 </th>
                             </tr>
                             <tr>
@@ -174,10 +175,10 @@
                                 <th><br></th>
                             </tr>
                             <tr>
-                                <th> H coefficient <i data-toggle="tooltip" data-placement="top" title="Coefficient used when calculating the h value<br>Min 0 - Max 99">&nbsp;?</i>
+                                <th> Coefficiente di h <i data-toggle="tooltip" data-placement="top" title="Coefficiente usato per calcolare il valore di h<br>Min 0 - Max 99">&nbsp;?</i>
                                 </th>
                                 <th> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                <th> Special ground <i data-toggle="tooltip" data-placement="top" title="Traversing the special ground will cost X times the normal ground cost<br>Only used for the g value<br>Min 0 - Max 99">&nbsp;?</i>
+                                <th> Terreno speciale <i data-toggle="tooltip" data-placement="top" title="Attraversare il terreno speciale costerà x volte il normale<br>Usato solo per g<br>Min 0 - Max 99">&nbsp;?</i>
                                 </th>
                             </tr>
                             <tr>
@@ -194,13 +195,14 @@
                                 <th><br></th>
                             </tr>
                             <tr>
-                                <th> Heuristic <i data-toggle="tooltip" data-placement="top" title="Heuristic used to calculate the h value for each node">&nbsp;?</i></th>
+                                <th> Euristica <i data-toggle="tooltip" data-placement="top" title="Euristica usata per calcolare il valore di h per ogni nodo">&nbsp;?</i>
+                                </th>
                             </tr>
                             <tr>
                                 <th> <select id="hsearch">
-                                        <option value="1">Manatthan distance</option>
-                                        <option value="2">Diagonal distance</option>
-                                        <option value="3">Euclidian distance</option>
+                                        <option value="1">Distanza di Manatthan</option>
+                                        <option value="2">Distanza diagonale</option>
+                                        <option value="3">Distanza Euclidea </option>
                                         <option value="4">Dijkstra (h = 0)</option>
                                     </select></th>
                             </tr>
@@ -211,9 +213,9 @@
                             <tr>
                                 <th>
                                     <input type="checkbox" class="form-check-input, ml-0" id="d">
-                                    <label class="form-check-label" for="d">Can move diagonally <i data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="Whether or not diagonal movements should be considered">&nbsp;?</i></label>
+                                    <label class="form-check-label" for="d">Può muoversi in diagonale <i
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Se il movimento diagonale è considerato lecito">&nbsp;?</i></label>
                                 </th>
                             </tr>
                         </tbody>
@@ -222,44 +224,36 @@
                 </div>
                 <br><br>
                 <div class=" modal-footer">
-                    <button class="btn-secondary" type="button" data-dismiss="modal" onclick="cancel()">Cancel</button>
-                    <button class="btn-primary" type="button" data-dismiss="modal" onclick="apply()">Apply</button>
+                    <button class="btn-secondary" type="button" data-dismiss="modal" onclick="cancel()">Annulla</button>
+                    <button class="btn-primary" type="button" data-dismiss="modal" onclick="apply()">Applica</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Snackbar-->
-    <div id="snackbar">Invalid start or end</div>
+    <div id="snackbar">Inizio o fine non validi</div>
 
     <script>
         document.validateInput = validateInput;
         document.checkInput = checkInput;
 
-        /**
-         * Used to enable the tooltips
-         */
+        //Needed to use the tooltips
         $(function() {
             $('[data-toggle="tooltip"]').tooltip({
                 html: true
             })
         })
 
-        /**
-         * Prevents the use of unwanted characters
-         * @param {any} ob - html input field
-         */
         function checkInput(ob) {
             ob.value = ob.value.replace(/[^0-9]/g, '');
+            if (ob.value.length > 2)
+                ob.value.length = 2;
         }
 
-        /**
-         * Checks that the value is between the constrains
-         * @param {any} ob - html input field
-         * @param {number} min - minimum value allowed
-         * @param {number} max - maximum value allowed
-         */
         function validateInput(ob, min, max) {
+            //ob.value = ob.value.replace(/(?<![1-9])0+\b/g, '1');
+
             if (ob.value == "")
                 ob.value = min;
             else if (ob.value > max)
@@ -268,30 +262,20 @@
                 ob.value = min;
         }
 
-        /**
-         * Change the status value and shows the modal
-         */
         function callSettings() {
             setStatus('settings');
             $('#settings').modal('show');
         }
 
-        /**
-         * Show the results of the algorithm
-         * @param {number} distance - distance result from the start point to hte end point
-         * @param {number} stepCounter - times of calls to the function 'stepSolution'
-         * @param {number} fcounter - times an fvalue got evalueted
-         * @param {number} time - time enlapsed
-         */
         function setResults(distance, stepCounter, fcounter, time) {
             if (distance < 0)
                 document.getElementById("result").innerHTML = "";
             else
                 document.getElementById("result").innerHTML =
-                "Shortest distance found: " + distance + "<br>" +
-                "Number of steps: " + stepCounter + "<br>" +
-                "Number of f value calculated: " + fcounter + "<br>" +
-                "Time elapsed " + (time / 1000).toFixed(3) + " sec";
+                "Camminino minimo trovato: " + distance + "<br>" +
+                "Numero di passi: " + stepCounter + "<br>" +
+                "Numero di valori f calcolati: " + fcounter + "<br>" +
+                "Tempo trascorso " + (time / 1000).toFixed(3) + " sec";
         }
     </script>
 </body>

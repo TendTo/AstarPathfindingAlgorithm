@@ -7,7 +7,8 @@ A live version is available [here](https://tendto.github.io/AstarPathfindingAlgo
 ![](graphic/demo.gif)
  
 ## :books: Documentation
-[Documentation](doc/DOC.md)
+[Code documentation](doc/doc_code.md)<br>
+[Settings documentation](doc/doc_settings.md)
 
 ## 🤝 Contributing
 
