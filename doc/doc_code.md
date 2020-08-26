@@ -22,9 +22,14 @@ function checkInput(ob)
 function validateInput(ob, min, max)
 
 /**
- * Change the status value and shows the modal
+ * Change the status value and shows the settings modal
  */
 function callSettings()
+
+/**
+ * Change the status value and shows the save/load modal
+ */
+function callSaveLoad()
 
 /**
  * Show the results of the algorithm
@@ -153,12 +158,13 @@ function  cancel()
 */
 function  setStatus(newStatus)
 ```
+
 ### astar.js
 ```javascript
 /**
 * Class that handles the A* algorithm
 */
-class  Astar
+class  Astar {}
 
 /**
 * Create an istance of Astar
@@ -248,4 +254,29 @@ drawFocus(x, y, color)
 * @param  {any}  point - point to push in the array
 */
 pushToOpenNodes(point)
+```
+
+### fileManager.js
+```javascript
+/**
+ * Class that handles saving and loading files
+ */
+class FileManager {}
+
+/**
+ * Read the data from the JSON file and update the canvas and the settigs accordingly
+ * @param {event} e - event triggered upon uploading a file
+ */
+static loadFile(e)
+
+/**
+ * Save the state of the canvas and the settings in a JSON file
+ */
+static saveFile()
+
+/**
+ * Tranform the data into a JSON string
+ * @returns {string} The data as a string
+ */
+static getJSON_Workspace()
 ```

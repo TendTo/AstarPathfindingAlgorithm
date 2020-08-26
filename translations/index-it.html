@@ -16,6 +16,7 @@
     <!-- A* -->
     <script src="../source/main.js"></script>
     <script src="../source/astar.js"></script>
+    <script src="../source/fileManager.js"></script>
     <title>A* pathfinding</title>
 </head>
 
@@ -51,7 +52,11 @@
                                 <i class="fa fa-cog"></i>
                                 Impostazioni
                             </button>
-                            <button type="button" class="btn btn-outline-light" onclick="window.open('https://github.com/TendTo/AstarPathfindingAlgorithm')">
+                            <button id="b_saveLoad" type="button" class="btn btn-outline-light" onclick="callSaveLoad()">
+                                <i class="fa fa-archive"></i>
+                                Salva/Carica
+                            </button>
+                            <button type="button" class="btn btn-outline-light" style="margin-left: 10px;" onclick="window.open('https://github.com/TendTo/AstarPathfindingAlgorithm')">
                                 <i class="fa fa-github"></i>
                             </button>
                         </div>
@@ -73,8 +78,8 @@
 
     <div class="container-fluid" style="margin-top: 10px;">
         <hr>
-        <!-- Palette -->
         <div class="row">
+            <!-- Palette -->
             <div class="tools ml-3" style="overflow-y:visible; position: fixed; top: 110px; left: 30px; z-index: 1;">
                 <div class="list-group float-right justify-content" style="min-width: 50px; max-width: 60px">
                     <button type="button" onclick="setPalette('ground')" class="list-group-item list-group-item-action pl-1 palette-button">
@@ -231,6 +236,34 @@
         </div>
     </div>
 
+    <!-- Save/Load modal-->
+    <div id="saveLoad" class="modal fade modal-class" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered " role="document" style="height: fill-content; width: 215px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Salva/Carica</h3>
+                </div>
+                <div class="modal-body row">
+                    <a download="AstarSave.astar" href="#" id="saveProjectFile" onclick="FileManager.saveFile()">
+                        <button type="button" class="btn btn-outline-light">
+                            <i class="fa fa-save"></i>
+                            Salva
+                        </button>
+                    </a>
+                    <label class="btn btn-outline-light" style="margin-left:10px">
+                        <input id="projectFile" type="file" onchange="FileManager.loadFile(event)" hidden></input>
+                        <i class="fa fa-upload"></i>
+                        Carica
+                    </label>
+                </div>
+                <br><br>
+                <div class=" modal-footer">
+                    <button class="btn-primary" type="button" data-dismiss="modal" onclick="cancel()">Dismiss</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Snackbar-->
     <div id="snackbar">Inizio o fine non validi</div>
 
@@ -265,6 +298,11 @@
         function callSettings() {
             setStatus('settings');
             $('#settings').modal('show');
+        }
+
+        function callSaveLoad() {
+            setStatus('settings');
+            $('#saveLoad').modal('show');
         }
 
         function setResults(distance, stepCounter, fcounter, time) {

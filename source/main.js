@@ -16,7 +16,7 @@ var C_GROUND_FILL,
     C_END_STROKE;
 var D = 10,
     D2 = 14;
-var i_w, i_h, i_dim, i_framerate, i_d1, i_d2, i_specialMult, i_hMult, d_heuristic, c_diagonal, snackbar, b_clear, b_settings, b_play, b_pause, b_stop;
+var i_w, i_h, i_dim, i_framerate, i_d1, i_d2, i_specialMult, i_hMult, d_heuristic, c_diagonal, snackbar, b_clear, b_settings, b_play, b_pause, b_stop, b_saveLoad;
 var currentPalette = palette["ground"];
 var currentStatus;
 var specialMult = 5;
@@ -99,6 +99,7 @@ function setupButtons() {
     b_play = document.getElementById("b_play");
     b_pause = document.getElementById("b_pause");
     b_stop = document.getElementById("b_stop");
+    b_saveLoad = document.getElementById("b_saveLoad");
 
     i_w.value = w;
     i_h.value = h;
@@ -381,7 +382,7 @@ function removeStartEnd(x, y) {
 function startAlgotithm() {
     if (currentStatus == status["pause"]) { //If the algorithm is paused, continue the animation
         setStatus("running");
-    } else if (validVector(start) && validVector(end)) { //If start and end are well positioned, start the algorithm
+    } else if (validVector(start) && validVector(end) && (start.x != end.x || start.y != end.y)) { //If start and end are well positioned, start the algorithm
         setStatus("running");
         drawMatrix();
         drawStartEnd();
@@ -406,6 +407,7 @@ function clearBoard() {
     modifiedSquares[start.x * h + start.y] = true;
     modifiedSquares[end.x * h + end.y] = true;
     start.x = start.y = end.x = end.y = -1;
+    setStatus("editor");
 }
 
 /**
@@ -469,26 +471,26 @@ function setStatus(newStatus) {
     switch (currentStatus) {
         case status["editor"]:
             frameRate(60);
-            b_play.disabled = b_clear.disabled = b_settings.disabled = false;
+            b_play.disabled = b_clear.disabled = b_settings.disabled = b_saveLoad.disabled = false;
             b_stop.disabled = b_pause.disabled = true;
             break;
         case status["running"]:
             frameRate(animFramerate);
             b_stop.disabled = b_pause.disabled = false;
-            b_play.disabled = b_clear.disabled = b_settings.disabled = true;
+            b_play.disabled = b_clear.disabled = b_settings.disabled = b_saveLoad.disabled = true;
             window.setResults(-1);
             break;
         case status["pause"]:
             b_stop.disabled = b_play.disabled = false;
-            b_pause.disabled = b_clear.disabled = b_settings.disabled = true;
+            b_pause.disabled = b_clear.disabled = b_settings.disabled = b_saveLoad.disabled = true;
             break;
         case status["stop"]:
             modifiedSquares.fill(true);
-            b_play.disabled = b_clear.disabled = b_settings.disabled = false;
+            b_play.disabled = b_clear.disabled = b_settings.disabled = b_saveLoad.disabled = false;
             b_pause.disabled = b_stop.disabled = true;
             break;
         case status["settings"]:
-            b_play.disabled = b_clear.disabled = b_settings.disabled = b_pause.disabled = b_stop.disabled = true;
+            b_play.disabled = b_clear.disabled = b_settings.disabled = b_saveLoad.disabled = b_pause.disabled = b_stop.disabled = true;
             break;
         default:
             break;
