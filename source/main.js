@@ -1,4 +1,4 @@
-/// <reference path="./p5.global-mode.d.ts" />
+// /// <reference path="./p5.global-mode.d.ts" /> Used to get comments about the p5 functions
 
 //#region consts and vars
 const palette = Object.freeze({ "ground": 1, "wall": 2, "start": 3, "end": 4, "special_ground": 5 });

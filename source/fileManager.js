@@ -60,7 +60,7 @@ class FileManager {
      */
     static saveFile() {
 
-        const jsonWorkspace = FileManager.getJSON_Workspace();
+        const jsonWorkspace = FileManager.getJSONString();
         var blob = new Blob([jsonWorkspace], { type: 'application/json' });
         saveProjectFile.href = URL.createObjectURL(blob);
     }
@@ -69,7 +69,7 @@ class FileManager {
      * Tranform the data into a JSON string
      * @returns {string} The data as a string
      */
-    static getJSON_Workspace() {
+    static getJSONString() {
         const data = new Object();
 
         data["dim"] = dim;

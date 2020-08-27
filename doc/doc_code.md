@@ -278,5 +278,5 @@ static saveFile()
  * Tranform the data into a JSON string
  * @returns {string} The data as a string
  */
-static getJSON_Workspace()
+static getJSONString()
 ```
